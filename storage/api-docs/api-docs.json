@@ -1,0 +1,644 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Phone Book application API Documentation",
+        "description": "Documentation for Phone Book Application API",
+        "contact": {
+            "name": "Danila Frolov",
+            "email": "danila-frolov-1996@mail.ru"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api/v1/phone-book/"
+        }
+    ],
+    "paths": {
+        "/contacts": {
+            "get": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Получение всех контактов",
+                "description": "Получение списка всех контактов пользователя",
+                "operationId": "index",
+                "parameters": [
+                    {
+                        "name": "searchQuery",
+                        "in": "query",
+                        "description": "Поисковой запрос",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        },
+                        "examples": {
+                            "Фамилия": {
+                                "summary": "Фамилия контакта",
+                                "value": "Фролов"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "200"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[{id: 1, firstName:'Иван', secondName:'Иванович', lastName:'Иванов', favorite: true, numbers:[{id:1, value:'81234567901'}]}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "204"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Запись контакта в БД",
+                "description": "Добавляет новую запись контакта в базу данных",
+                "operationId": "store",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "firstName",
+                                    "lastName",
+                                    "numbers"
+                                ],
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string",
+                                        "example": "Иван"
+                                    },
+                                    "secondName": {
+                                        "type": "string",
+                                        "example": "Иванович"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Иванов"
+                                    },
+                                    "numbers": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "value": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "example": "[{'value': '89152207686'}]"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "201"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "{id: 1, firstName:'Иван', secondName:'Иванович', lastName:'Иванов', favorite: false, numbers:[{id:1, value:'385905890348'}, {id:2, value:'48290348092834'}]}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "422"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[{message: 'Ошибка SQL', error: 'Информация об ошибке'}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/favorite/contacts": {
+            "get": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Получение всех избранных контактов",
+                "description": "Получение списка всех избранных контактов пользователя",
+                "operationId": "indexFavorite",
+                "parameters": [
+                    {
+                        "name": "searchQuery",
+                        "in": "query",
+                        "description": "Поисковой запрос",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        },
+                        "examples": {
+                            "Фамилия": {
+                                "summary": "Фамилия контакта",
+                                "value": "Фролов"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "200"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[{id: 1, firstName:'Иван', secondName:'Иванович', lastName:'Иванов', favorite: true, numbers:[{id:1, value:'81234567901'}]}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "No content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "204"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contacts/{id}": {
+            "get": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Получение конкретного контакта",
+                "description": "Получение конкретного контакта по идентификатору",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор контакта",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "examples": {
+                            "1": {
+                                "summary": "Идентификатор контакта",
+                                "value": 1
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "200"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "{id: 1, firstName:'Иван', secondName:'Иванович', lastName:'Иванов', favorite: true, numbers:[{id:1, value:'81234567901'}]}"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "404"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[error: 'No query results for model [App\\\\Models\\\\PhoneBook\\\\Contact] id модели'}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Обновление контакта в БД",
+                "description": "Обновляет запись контакта в базе данных",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор контакта",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "examples": {
+                            "1": {
+                                "summary": "Идентификатор контакта",
+                                "value": 1
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "firstName",
+                                    "lastName",
+                                    "numbers"
+                                ],
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string",
+                                        "example": "Иван"
+                                    },
+                                    "secondName": {
+                                        "type": "string",
+                                        "example": "Иванович"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Иванов"
+                                    },
+                                    "numbers": {
+                                        "type": "object",
+                                        "example": "[{id: 1, value: '385905890348'}, {value: '48290348092834'}]"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "20"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "422"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[{message: 'Ошибка SQL', error: 'Информация об ошибке'}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Удаление контакта из БД",
+                "description": "Удаляет запись контакта из базы данных",
+                "operationId": "destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор контакта",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "examples": {
+                            "1": {
+                                "summary": "Идентификатор контакта",
+                                "value": 1
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Контакт успешно удалён"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "404"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[error: 'Контакт не найден'}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/contacts/favorite/{id}": {
+            "patch": {
+                "tags": [
+                    "Contacts"
+                ],
+                "summary": "Добавление/удаление избранности контатка",
+                "description": "Добавляет контакт в список избранных или удаляет его оттуда",
+                "operationId": "favorite",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор контакта",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "examples": {
+                            "1": {
+                                "summary": "Идентификатор контакта",
+                                "value": 1
+                            }
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "favorite"
+                                ],
+                                "properties": {
+                                    "favorite": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Избранность контакта успешно обновлена"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "422"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[{message: 'Ошибка SQL', error: 'Информация об ошибке'}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/numbers/{id}": {
+            "delete": {
+                "tags": [
+                    "Number"
+                ],
+                "summary": "Удаление номер из БД",
+                "description": "Удаляет запись номера из базы данных",
+                "operationId": "destroyNumber",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Идентификатор номера",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "examples": {
+                            "1": {
+                                "summary": "Идентификатор контакта",
+                                "value": 1
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "200"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Номер успешно удалён"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": "404"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": "[error: 'Номер не найден'}]"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
